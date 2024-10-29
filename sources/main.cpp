@@ -18,9 +18,9 @@ int main(void)
     while (!WindowShouldClose())
     {
         BeginDrawing();
-        auto x = color1 * 0.5;
-        auto y = color2 * 0.5;
-        auto z = color1 + color2;
+        auto delta = GetTime() / 10;
+        auto x = color1 * (1 - delta);
+        auto y = color2 * delta;
         Color d = {x[0], x[1], x[2], x[3]};
         ClearBackground(d);
 
