@@ -6,13 +6,19 @@
 
 class numeric_array
 {
+    enum blend_mode
+    {
+        linear,
+        cyclical
+    };
+
 protected:
     std::vector<double> _elements{};
 
 public:
     static numeric_array linear_range(double start, double end, double count);
     static numeric_array merge(numeric_array &leftArray, numeric_array &rightArray, const std::function<double(double, double)> transformation);
-    static numeric_array blend(numeric_array &leftArray, numeric_array &rightArray, numeric_array &weights);
+    static numeric_array blend(vector<numeric_array> arrays, numeric_array &weight, blend_mode mode = linear);
 
     numeric_array() = default;
     numeric_array(std::vector<double> elements)
@@ -28,7 +34,7 @@ public:
     std::vector<double>::iterator begin();
     std::vector<double>::iterator end();
 
-    double operator[](int i);
+    double& operator[](int i);
 
     const size_t size();
 

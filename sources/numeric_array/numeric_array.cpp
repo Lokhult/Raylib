@@ -1,5 +1,6 @@
 #include <vector>
 #include <functional>
+#include <cmath>
 #include "numeric_array.h"
 
 using namespace std;
@@ -18,27 +19,37 @@ numeric_array numeric_array::linear_range(double start, double end, double count
     return numeric_array(result);
 }
 
-numeric_array numeric_array::blend(numeric_array &leftArray, numeric_array &rightArray, numeric_array &weights) 
+numeric_array numeric_array::blend(vector<numeric_array> arrays, numeric_array &weights, blend_mode mode = linear)
 {
     vector<double> result;
 
-    for (auto i = 0; i < leftArray.size(); i++)
+    const double factorDelta = 1.0 / (arrays.size() - 1 + mode);
+
+    for (int i = 0; i < weights.size(); i++)
     {
-        result.push_back(leftArray._elements[i] * weights._elements[i] + rightArray._elements[i] * (1 - weights._elements[i]));
+        weights[i] -= 1; //-0.1E-10;
+        const int pairIndex = floor(weights[i] / factorDelta);
+        const double normalizedFactor = (weights[i] / factorDelta) - pairIndex;
+
+        result.push_back(
+            (1.0 - normalizedFactor) * arrays[pairIndex % arrays.size()][i] +
+            normalizedFactor * arrays[(pairIndex + 1) % arrays.size()][i]);
     }
 
     return numeric_array{result};
 }
 
-std::vector<double>::iterator numeric_array::begin() {
+std::vector<double>::iterator numeric_array::begin()
+{
     return _elements.begin();
 }
 
-std::vector<double>::iterator numeric_array::end() {
+std::vector<double>::iterator numeric_array::end()
+{
     return _elements.end();
 }
 
-double numeric_array::operator[](int i)
+double &numeric_array::operator[](int i)
 {
     return _elements[i];
 }
