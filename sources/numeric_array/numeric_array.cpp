@@ -18,6 +18,14 @@ numeric_array numeric_array::linear_range(double start, double end, double count
     return numeric_array(result);
 }
 
+std::vector<double>::iterator numeric_array::begin() {
+    return _elements.begin();
+}
+
+std::vector<double>::iterator numeric_array::end() {
+    return _elements.end();
+}
+
 double numeric_array::operator[](int i)
 {
     return _elements[i];

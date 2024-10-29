@@ -23,6 +23,9 @@ public:
         _elements = init_list;
     }
 
+    std::vector<double>::iterator begin();
+    std::vector<double>::iterator end();
+
     double operator[](int i);
 
     const size_t size();

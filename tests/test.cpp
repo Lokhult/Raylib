@@ -5,10 +5,9 @@ using namespace std;
 
 int main()
 {
-    numeric_array color1{150, 150, 255, 2500};
-    numeric_array color2{150, 150, 255, 2500};
-    color1 *= 2;
-    color1 += color2;
-    cout << color1.to_string() << endl;
+    auto v = numeric_array::linear_range(0, 10, 5);
+    cout << v.to_string() << endl;
+    cout << v[0] << v[1] << v[2] << v[3] << endl;
+    cout << v.size() << endl;
     return 0;
 }
