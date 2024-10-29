@@ -10,6 +10,7 @@ protected:
     std::vector<double> _elements{};
 
 public:
+    numeric_array() = default;
     numeric_array(std::vector<double> elements)
     {
         _elements = elements;
@@ -19,6 +20,8 @@ public:
     {
         _elements = init_list;
     }
+
+    double operator [](int i);
 
     const size_t size();
 

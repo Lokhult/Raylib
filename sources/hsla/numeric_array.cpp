@@ -1,8 +1,13 @@
 #include <vector>
 #include <functional>
-#include "numeric_array.hpp"
+#include "numeric_array.h"
 
 using namespace std;
+
+double numeric_array::operator[](int i)
+{
+    return _elements[i];
+}
 
 const size_t numeric_array::size()
 {
