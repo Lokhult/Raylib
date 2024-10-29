@@ -30,9 +30,9 @@ numeric_array numeric_array::immutable_transform(const std::function<double(doub
 {
     vector<double> result;
 
-    for (auto i = 0; i < _elements.size(); i++)
+    for (auto v: _elements)
     {
-        result[i] = transformation(_elements[i]);
+        result.push_back(transformation(v));
     }
 
     return numeric_array(result);
