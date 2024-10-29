@@ -1,15 +1,21 @@
 #include "raylib.h"
-#include "hsla/numeric_array.h"
+#include "numeric_array/numeric_array.h"
 
 #define SCREEN_WIDTH (800)
 #define SCREEN_HEIGHT (450)
 
 #define WINDOW_TITLE "Window title"
 
+Color numeric_array_to_color(numeric_array &array)
+{
+    return Color{static_cast<unsigned char>(array[0]), static_cast<unsigned char>(array[1]), static_cast<unsigned char>(array[2]), static_cast<unsigned char>(array[3])};
+}
+
 int main(void)
 {
     numeric_array color1{150, 150, 255, 2500};
     numeric_array color2{255, 150, 150, 2500};
+    auto pos = numeric_array::linear_range(50, 150, 3);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
     SetTargetFPS(60);
 
@@ -21,8 +27,10 @@ int main(void)
         auto delta = GetTime() / 10;
         auto x = color1 * (1 - delta);
         auto y = color2 * delta;
-        Color d = {x[0], x[1], x[2], x[3]};
-        ClearBackground(d);
+        ClearBackground(numeric_array_to_color(y));
+
+        for (auto p : pos) 
+            DrawCircle(50, 50, 50, numeric_array_to_color(x));
 
         // const int texture_x = SCREEN_WIDTH / 2 - texture.width / 2;
         // const int texture_y = SCREEN_HEIGHT / 2 - texture.height / 2;

@@ -4,6 +4,20 @@
 
 using namespace std;
 
+numeric_array numeric_array::linear_range(double start, double end, double count)
+{
+    std::vector<double> result;
+    double range = end - start;
+    double delta = range / (count - 1);
+
+    for (double i = start; i < count; i++)
+    {
+        result.push_back(start + delta * i);
+    }
+
+    return numeric_array(result);
+}
+
 double numeric_array::operator[](int i)
 {
     return _elements[i];
@@ -30,7 +44,7 @@ numeric_array numeric_array::immutable_transform(const std::function<double(doub
 {
     vector<double> result;
 
-    for (auto v: _elements)
+    for (auto v : _elements)
     {
         result.push_back(transformation(v));
     }

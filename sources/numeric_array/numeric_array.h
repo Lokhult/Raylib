@@ -10,6 +10,8 @@ protected:
     std::vector<double> _elements{};
 
 public:
+    static numeric_array linear_range(double start, double end, double count);
+
     numeric_array() = default;
     numeric_array(std::vector<double> elements)
     {
@@ -21,7 +23,7 @@ public:
         _elements = init_list;
     }
 
-    double operator [](int i);
+    double operator[](int i);
 
     const size_t size();
 

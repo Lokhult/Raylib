@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../sources/hsla/numeric_array.h"
+#include "../sources/numeric_array/numeric_array.h"
 
 using namespace std;
 
