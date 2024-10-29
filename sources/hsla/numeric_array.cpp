@@ -20,7 +20,7 @@ numeric_array numeric_array::merge(numeric_array &leftArray, numeric_array &righ
 
     for (auto i = 0; i < leftArray.size(); i++)
     {
-        result[i] = transformation(leftArray._elements[i], rightArray._elements[i]);
+        result.push_back(transformation(leftArray._elements[i], rightArray._elements[i]));
     }
 
     return numeric_array{result};
