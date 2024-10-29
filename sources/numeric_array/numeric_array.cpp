@@ -18,6 +18,18 @@ numeric_array numeric_array::linear_range(double start, double end, double count
     return numeric_array(result);
 }
 
+numeric_array numeric_array::blend(numeric_array &leftArray, numeric_array &rightArray, numeric_array &weights) 
+{
+    vector<double> result;
+
+    for (auto i = 0; i < leftArray.size(); i++)
+    {
+        result.push_back(leftArray._elements[i] * weights._elements[i] + rightArray._elements[i] * (1 - weights._elements[i]));
+    }
+
+    return numeric_array{result};
+}
+
 std::vector<double>::iterator numeric_array::begin() {
     return _elements.begin();
 }

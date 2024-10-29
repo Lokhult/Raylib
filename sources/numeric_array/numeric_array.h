@@ -11,6 +11,8 @@ protected:
 
 public:
     static numeric_array linear_range(double start, double end, double count);
+    static numeric_array merge(numeric_array &leftArray, numeric_array &rightArray, const std::function<double(double, double)> transformation);
+    static numeric_array blend(numeric_array &leftArray, numeric_array &rightArray, numeric_array &weights);
 
     numeric_array() = default;
     numeric_array(std::vector<double> elements)
@@ -30,7 +32,6 @@ public:
 
     const size_t size();
 
-    static numeric_array merge(numeric_array &leftArray, numeric_array &rightArray, const std::function<double(double, double)> transformation);
     numeric_array immutable_transform(const std::function<double(double)> &transformation);
     numeric_array mutable_transform(const std::function<double(double)> &transformation);
 
