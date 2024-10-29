@@ -28,8 +28,8 @@ target_sources(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE})
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 
-add_executable(tests tests/test.cpp)
-
+add_executable(tests tests/test.cpp sources/hsla/numeric_array.cpp)
+target_include_directories(tests PRIVATE ${PROJECT_INCLUDE})
 
 # Setting ASSETS_PATH
 target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/") # Set the asset path macro to the absolute path on the dev machine
