@@ -41,12 +41,12 @@ int main(void)
     rgba color1{150, 150, 255, 2500};
     rgba color2{255, 150, 150, 2500};
     vector<vec2> positions{
-        denormalized_coords(vec2{0.0, 0.0}),
-        denormalized_coords(vec2{1.0, 0.0}),
-        denormalized_coords(vec2{1.0, 1.0}),
-        denormalized_coords(vec2{0.0, 1.0})};
+        vec2{0.0, 0.0},
+        vec2{SCREEN_WIDTH, 0.0},
+    };
+    vec2 p{0, 0};
 
-    transition<2> pos_t{10, positions};
+    transition<2> pos_t{2, positions, interpolations::linear};
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
     SetTargetFPS(60);
@@ -69,7 +69,8 @@ int main(void)
         // const int texture_x = SCREEN_WIDTH / 2 - texture.width / 2;
         // const int texture_y = SCREEN_HEIGHT / 2 - texture.height / 2;
         // DrawTexture(texture, texture_x, texture_y, WHITE);
-        string str = to_string(delta);
+        string str = to_string(pos[0]) + ", " + to_string(pos[1]);
+        // string str = to_string(pos_t.t()) + ", " + to_string(pos_t.interpolated_t());
         const char *text = str.c_str();
         const Vector2 text_size = MeasureTextEx(GetFontDefault(), text, 20, 1);
         DrawText(text, SCREEN_WIDTH / 2 - text_size.x / 2, 150, 20, BLACK);

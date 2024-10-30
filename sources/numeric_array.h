@@ -10,8 +10,8 @@ class numeric_array
 public:
     enum blend_mode
     {
-        linear = 0,
-        cyclic = 1
+        open,
+        closed
     };
 
 protected:
@@ -19,8 +19,8 @@ protected:
 
 public:
     static numeric_array merge(numeric_array &leftArray, numeric_array &rightArray, const std::function<double(double, double)> transformation);
-    static numeric_array blend(std::vector<numeric_array> arrays, numeric_array &weight, blend_mode mode = linear);
-    static numeric_array blend(std::vector<numeric_array> arrays, double weight, blend_mode mode = linear);
+    static numeric_array blend(std::vector<numeric_array> arrays, numeric_array &weights, blend_mode mode = open);
+    static numeric_array blend(std::vector<numeric_array> arrays, double weight, blend_mode mode = closed);
 
     numeric_array() = default;
     numeric_array(std::array<double, N> elements)
@@ -76,23 +76,40 @@ typedef numeric_array<4> hsla;
 typedef numeric_array<4> rgba;
 typedef numeric_array<3> vec3;
 typedef numeric_array<2> vec2;
+typedef numeric_array<1> scalar;
+
+#include <iostream>
 
 template <int N>
-numeric_array<N> numeric_array<N>::blend(std::vector<numeric_array<N>> arrays, numeric_array<N> &weights, blend_mode mode)
+numeric_array<N> numeric_array<N>::blend(std::vector<numeric_array> arrays, numeric_array<N> &weights, blend_mode mode)
 {
     std::array<double, N> result;
 
-    const double factorDelta = 1.0 / (arrays.size() - 1 + mode);
+    if (mode == blend_mode::closed)
+    {
+        arrays.push_back(arrays[0]);
+    }
 
+    double delta = 1.0 / (arrays.size() - 1.0);
     for (int i = 0; i < weights.size(); i++)
     {
-        weights[i] -= 1; //-0.1E-10;
-        const int pairIndex = floor(weights[i] / factorDelta);
-        const double normalizedFactor = (weights[i] / factorDelta) - pairIndex;
+        double weight = weights[i];
+        if (weight < 0)
+            weight = 0;
+        if (weight > 0.99995)
+            weight = 1;
 
-        result[i] =
-            (1.0 - normalizedFactor) * arrays[pairIndex % arrays.size()][i] +
-            normalizedFactor * arrays[(pairIndex + 1) % arrays.size()][i];
+        if (weight == 1)
+        {
+            result[i] = arrays[arrays.size() - 1][i];
+            continue;
+        }
+
+        double x = weight / delta;
+        int pairIndex = floor(weight / delta);
+        double normalizedFactor = (weight / delta) - pairIndex;
+
+        result[i] = (1 - normalizedFactor) * arrays[pairIndex][i] + normalizedFactor * arrays[pairIndex + 1][i];
     }
 
     return numeric_array{result};
