@@ -44,8 +44,8 @@ private:
     double _duration;
     double _seconds = 0;
     std::vector<numeric_array<N>> _frames;
-    std::function<double(double)> _interpolation;
-    std::function<double(double)> _overflow;
+    std::array<std::function<double(double)>, N> _interpolations;
+    std::array<std::function<double(double)>, N> _overflows;
 
 public:
     transition(
@@ -53,29 +53,37 @@ public:
         std::vector<numeric_array<N>> frames,
         std::function<double(double)> interpolation = interpolations::linear,
         std::function<double(double)> overflow = overflows::clamp) : _duration(duration),
-                                                                     _frames(frames),
-                                                                     _interpolation(interpolation),
-                                                                     _overflow(overflow) {}
+                                                                     _frames(frames)
+    {
+        for (int i = 0; i < N; i++)
+        {
+            _interpolations[i] = interpolation;
+            _overflows[i] = overflow;
+        }
+    }
+
+    transition(
+        double duration,
+        std::vector<numeric_array<N>> frames,
+        std::array<std::function<double(double)>, N> interpolations,
+        std::array<std::function<double(double)>, N> overflows) : _duration(duration),
+                                                                  _frames(frames),
+                                                                  _interpolations(interpolations),
+                                                                  _overflows(overflows)
+    {
+    }
 
     numeric_array<N> update(double deltaSeconds)
     {
         _seconds += deltaSeconds;
-        double t = _interpolation(_overflow(_seconds / _duration));
-        return numeric_array<N>::blend(_frames, t, numeric_array<N>::blend_mode::linear);
-    }
 
-    double seconds()
-    {
-        return _seconds;
-    }
+        std::array<double, N> t;
+        for (int i = 0; i < N; i++)
+        {
+            t[i] = _interpolations[i](_overflows[i](_seconds / _duration));
+        }
+        auto weights = numeric_array<N>{t};
 
-    double t()
-    {
-        return (_seconds / _duration);
-    }
-
-    double interpolated_t()
-    {
-        return _interpolation(_overflow(_seconds / _duration));
+        return numeric_array<N>::blend(_frames, weights, numeric_array<N>::blend_mode::closed);
     }
 };

@@ -42,11 +42,11 @@ int main(void)
     rgba color2{255, 150, 150, 2500};
     vector<vec2> positions{
         vec2{0.0, 0.0},
-        vec2{SCREEN_WIDTH, 0.0},
+        vec2{SCREEN_WIDTH, SCREEN_HEIGHT},
     };
     vec2 p{0, 0};
 
-    transition<2> pos_t{2, positions, interpolations::linear};
+    transition<2> pos_t{2, positions, {interpolations::ease_in_ease_out, interpolations::linear}, {overflows::clamp, overflows::clamp}};
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
     SetTargetFPS(60);
