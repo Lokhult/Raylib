@@ -4,6 +4,7 @@
 #include <functional>
 #include <cmath>
 #include <numbers>
+#include <random>
 
 // A set of function from [0, 1] to [0, 1]
 namespace interpolations
@@ -16,6 +17,14 @@ namespace interpolations
     double ease_in_ease_out(double t)
     {
         return 0.5 * (sin((t - 0.5) * std::numbers::pi) + 1);
+    }
+
+    double random(double t)
+    {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<> distr(0, 1);
+        return distr(gen);
     }
 }
 
@@ -98,6 +107,6 @@ public:
         }
         auto weights = numeric_array<N>{t};
 
-        return numeric_array<N>::blend(_frames, weights, numeric_array<N>::blend_mode::closed);
+        return numeric_array<N>::blend(_frames, weights, numeric_array<N>::blend_mode::open);
     }
 };
