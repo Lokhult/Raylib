@@ -18,9 +18,9 @@ protected:
     std::array<double, N> _elements{};
 
 public:
-    static numeric_array linear_range(double start, double end, double count);
     static numeric_array merge(numeric_array &leftArray, numeric_array &rightArray, const std::function<double(double, double)> transformation);
     static numeric_array blend(std::vector<numeric_array> arrays, numeric_array &weight, blend_mode mode = linear);
+    static numeric_array blend(std::vector<numeric_array> arrays, double weight, blend_mode mode = linear);
 
     numeric_array() = default;
     numeric_array(std::array<double, N> elements)
@@ -78,21 +78,6 @@ typedef numeric_array<3> vec3;
 typedef numeric_array<2> vec2;
 
 template <int N>
-numeric_array<N> numeric_array<N>::linear_range(double start, double end, double count)
-{
-    std::vector<double> result;
-    double range = end - start;
-    double delta = range / (count - 1);
-
-    for (double i = start; i < count; i++)
-    {
-        result.push_back(start + delta * i);
-    }
-
-    return numeric_array(result);
-}
-
-template<int N>
 numeric_array<N> numeric_array<N>::blend(std::vector<numeric_array<N>> arrays, numeric_array<N> &weights, blend_mode mode)
 {
     std::array<double, N> result;
@@ -105,12 +90,25 @@ numeric_array<N> numeric_array<N>::blend(std::vector<numeric_array<N>> arrays, n
         const int pairIndex = floor(weights[i] / factorDelta);
         const double normalizedFactor = (weights[i] / factorDelta) - pairIndex;
 
-        result[i] = 
+        result[i] =
             (1.0 - normalizedFactor) * arrays[pairIndex % arrays.size()][i] +
             normalizedFactor * arrays[(pairIndex + 1) % arrays.size()][i];
     }
 
     return numeric_array{result};
+}
+
+template <int N>
+numeric_array<N> numeric_array<N>::blend(std::vector<numeric_array> arrays, double weight, blend_mode mode)
+{
+    numeric_array<N> weights;
+
+    for (int i = 0; i < N; i++)
+    {
+        weights[i] = weight;
+    }
+
+    return blend(arrays, weights, mode);
 }
 
 template <int N>
