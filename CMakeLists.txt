@@ -28,7 +28,7 @@ target_sources(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE})
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 
-add_executable(tests tests/test.cpp sources/numeric_array/numeric_array.cpp)
+add_executable(tests tests/test.cpp)
 target_include_directories(tests PRIVATE ${PROJECT_INCLUDE})
 
 # Setting ASSETS_PATH
