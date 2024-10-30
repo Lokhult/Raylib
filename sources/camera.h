@@ -6,6 +6,7 @@ class camera
 {
 private:
     Camera2D _camera;
+    bool _isDragging = false;
 
 public:
     camera(Camera2D camera) : _camera(camera) {}
@@ -17,6 +18,29 @@ public:
             .target = {0, 0},
             .rotation = 0,
             .zoom = 1};
+    }
+
+    void update(double deltaSeconds)
+    {
+        auto wheelMove = GetMouseWheelMoveV();
+        _camera.zoom -= wheelMove.y;
+
+        if (IsMouseButtonPressed(1))
+        {
+            _isDragging = true;
+        }
+
+        if (_isDragging)
+        {
+            auto delta = GetMouseDelta();
+            _camera.offset.x += delta.x;
+            _camera.offset.y += delta.y;
+        }
+
+        if (IsMouseButtonReleased(1))
+        {
+            _isDragging = false;
+        }
     }
 
     void begin()

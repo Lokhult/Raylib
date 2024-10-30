@@ -75,6 +75,7 @@ int main(void)
     {
         BeginDrawing();
         cam.begin();
+        cam.update(GetFrameTime());
         auto delta = GetTime() / 10;
         auto x = color1 * (1 - delta);
         auto y = color2 * delta;
