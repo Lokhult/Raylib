@@ -66,6 +66,20 @@ public:
         double duration,
         std::vector<numeric_array<N>> frames,
         std::array<std::function<double(double)>, N> interpolations,
+        std::function<double(double)> overflow = overflows::clamp) : _duration(duration),
+                                                                     _interpolations(interpolations),
+                                                                     _frames(frames)
+    {
+        for (int i = 0; i < N; i++)
+        {
+            _overflows[i] = overflow;
+        }
+    }
+
+    transition(
+        double duration,
+        std::vector<numeric_array<N>> frames,
+        std::array<std::function<double(double)>, N> interpolations,
         std::array<std::function<double(double)>, N> overflows) : _duration(duration),
                                                                   _frames(frames),
                                                                   _interpolations(interpolations),

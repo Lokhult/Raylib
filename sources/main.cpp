@@ -46,7 +46,7 @@ int main(void)
     };
     vec2 p{0, 0};
 
-    transition<2> pos_t{2, positions, {interpolations::ease_in_ease_out, interpolations::linear}, {overflows::clamp, overflows::clamp}};
+    transition<2> pos_t{2, positions, {interpolations::ease_in_ease_out, interpolations::linear}};
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
     SetTargetFPS(60);
