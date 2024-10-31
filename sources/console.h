@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <raylib.h>
 
 const float margin = 5;
@@ -17,7 +18,8 @@ private:
         .y = margin,
         .width = static_cast<float>(GetScreenWidth()) - 2 * margin,
         .height = fontSize + 2 * padding};
-    std::string _content = "Console Line";
+    std::string _content{"Console Line"};
+    std::vector<std::string> _output{};
     bool _focused = false;
 
 public:
@@ -38,9 +40,38 @@ public:
         {
             _focused = true;
         }
+
         if (IsMouseButtonReleased(0) && !CheckCollisionPointRec(GetMousePosition(), _bounds))
         {
             _focused = false;
         }
+
+        if (_focused)
+        {
+            int charKey;
+            while ((charKey = GetCharPressed()) != 0)
+            {
+                _content += static_cast<char>(charKey);
+            }
+
+            int key;
+            while ((key = GetKeyPressed()) != 0)
+            {
+                switch (key)
+                {
+                case KEY_BACKSPACE:
+                    _content = _content.substr(0, _content.size() - 1);
+                    break;
+                case KEY_ENTER:
+                    submit();
+                    break;
+                }
+            }
+        }
+    }
+
+    void submit()
+    {
+        _content = "";
     }
 };
