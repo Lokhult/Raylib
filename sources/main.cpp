@@ -6,6 +6,7 @@
 #include "RLCamera.h"
 #include "grid.h"
 #include "transitionEngine.h"
+#include "console.h"
 
 using namespace std;
 
@@ -35,8 +36,11 @@ vector<double> linear_range(double start, double end, double count)
 
 int main(void)
 {
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
+
     RLCamera camera{SCREEN_WIDTH, SCREEN_HEIGHT};
     Grid grid;
+    Console console;
     TransitionEngine<2> transitionEngine2;
     TransitionEngine<4> transitionEngine4;
 
@@ -53,10 +57,7 @@ int main(void)
     transitionEngine2.addTransition(transition_pos);
     transitionEngine4.addTransition(transition_colors);
 
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
     SetTargetFPS(60);
-
-    // Texture2D texture = LoadTexture(ASSETS_PATH"test.png"); // Check README.md for how this works
 
     while (!WindowShouldClose())
     {
@@ -64,13 +65,18 @@ int main(void)
         transitionEngine4.update(GetFrameTime());
 
         BeginDrawing();
-        camera.begin();
-        camera.update(GetFrameTime());
-        ClearBackground(BLUE);
-        grid.draw(camera);
-        DrawCircle(pos[0], pos[1], 50, numeric_array_to_color(color));
+        {
+            camera.begin();
+            {
+                camera.update(GetFrameTime());
+                ClearBackground(BLUE);
+                grid.draw(camera);
+                DrawCircle(pos[0], pos[1], 50, numeric_array_to_color(color));
+            }
+            camera.end();
 
-        camera.end();
+            console.draw();
+        }
         EndDrawing();
     }
 

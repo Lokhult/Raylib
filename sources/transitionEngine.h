@@ -11,7 +11,7 @@ private:
 public:
     TransitionEngine() = default;
 
-    void addTransition(Transition<N> transition)
+    void addTransition(Transition<N> &transition)
     {
         _transitions.push_back(transition);
     }
