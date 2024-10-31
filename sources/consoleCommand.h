@@ -5,10 +5,14 @@
 #include <regex>
 #include <functional>
 #include <sstream>
+#include <iostream>
 
-const std::string regexInt = R"(^[0-9]?$)";
-const std::string regexDouble = R"(^[0-9](\.[0-9]?)?$)";
-const std::string regexString = R"(^.?$)";
+namespace Types
+{
+    const std::string Int = R"(^-?\d+$)";
+    const std::string Double = R"(-?\d*(\.\d*)?$)";
+    const std::string String = R"(^.*$)";
+}
 
 class ConsoleCommand
 {
@@ -23,16 +27,24 @@ public:
     std::string operator()(std::string args)
     {
         std::vector<std::string> argList;
-        // Checks that args matches
         std::string arg;
         std::istringstream argStream(args);
+        while (getline(argStream, arg, ' '))
+        {
+            argList.push_back(arg);
+        }
+
+        // Checks that args matches
+        if (argList.size() != _format.size())
+            return "";
+
         for (int i = 0; i < _format.size(); i++)
         {
-            getline(argStream, arg, ' ');
-            auto formatWord = _format[i];
-            std::regex rx(formatWord);
+            std::regex rx(_format[i]);
 
-            if (!std::regex_search(arg, rx))
+            std::cout << "(format: " << _format[i] << ", arg: " << argList[i] << ") ";
+
+            if (!std::regex_search(argList[i], rx))
             {
                 return "";
             }
@@ -41,6 +53,6 @@ public:
                 argList.push_back(arg);
         }
 
-        return _callback(argList);
+        return _callback(std::vector<std::string>(argList.begin() + 1, argList.end()));
     }
 };

@@ -40,46 +40,23 @@ int main(void)
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
 
+    vector<NumericArray<3>> circles;
+
     RLCamera camera{SCREEN_WIDTH, SCREEN_HEIGHT};
     Grid grid;
     RaylibConsole console{SCREEN_WIDTH, SCREEN_HEIGHT};
 
-    auto callback = [](vector<string> args)
-    {
-        return "Exit successful";
-    };
-
-    ConsoleCommand consoleCommand{
-        {"exit"},
-        callback};
-
-    console.addCommand({{"exit"},
-                        [](vector<string> args)
+    console.addCommand({{"circle", Types::Double, Types::Double, Types::Double},
+                        [&circles](vector<string> args)
                         {
-                            return "Exit successful";
+                            circles.push_back({stod(args[0]), stod(args[1]), stod(args[2])});
+                            return "Circle created";
                         }});
-    TransitionEngine<2> transitionEngine2;
-    TransitionEngine<4> transitionEngine4;
-
-    Vec2 pos;
-    Rgba color;
-
-    Transition<2> transition_pos{pos, 2, {
-                                             Vec2{0.0, 0.0},
-                                             Vec2{SCREEN_WIDTH, SCREEN_HEIGHT},
-                                         },
-                                 {Interpolations::linear, Interpolations::linear},
-                                 Overflows::repeat};
-    Transition<4> transition_colors{color, 4, {Rgba{150, 150, 255, 2500}, Rgba{255, 150, 150, 2500}}, Interpolations::ease_in_ease_out, Overflows::repeat};
-    transitionEngine2.addTransition(transition_pos);
-    transitionEngine4.addTransition(transition_colors);
 
     SetTargetFPS(60);
 
     while (!WindowShouldClose())
     {
-        transitionEngine2.update(GetFrameTime());
-        transitionEngine4.update(GetFrameTime());
 
         BeginDrawing();
         {
@@ -88,7 +65,10 @@ int main(void)
                 camera.update(GetFrameTime());
                 ClearBackground(BLUE);
                 grid.draw(camera);
-                DrawCircle(pos[0], pos[1], 50, numeric_array_to_color(color));
+                for (auto circle : circles)
+                {
+                    DrawCircle(circle[0], circle[1], circle[2], GREEN);
+                }
             }
             camera.end();
 
