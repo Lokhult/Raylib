@@ -18,16 +18,29 @@ private:
         .width = static_cast<float>(GetScreenWidth()) - 2 * margin,
         .height = fontSize + 2 * padding};
     std::string _content = "Console Line";
-    bool _focused = true;
+    bool _focused = false;
 
 public:
     void draw()
     {
+        update();
         DrawRectangleRec(_bounds, consoleBackground);
         if (_focused)
         {
             DrawRectangleLinesEx(_bounds, borderWidth, Color{255, 255, 255, 255});
         }
         DrawText(_content.c_str(), _bounds.x + padding, _bounds.y + padding, fontSize, BLACK);
+    }
+
+    void update()
+    {
+        if (IsMouseButtonPressed(0) && CheckCollisionPointRec(GetMousePosition(), _bounds))
+        {
+            _focused = true;
+        }
+        if (IsMouseButtonReleased(0) && !CheckCollisionPointRec(GetMousePosition(), _bounds))
+        {
+            _focused = false;
+        }
     }
 };
