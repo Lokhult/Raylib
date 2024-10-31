@@ -20,7 +20,7 @@ protected:
 public:
     static NumericArray merge(NumericArray &leftArray, NumericArray &rightArray, const std::function<double(double, double)> transformation);
     static NumericArray blend(std::vector<NumericArray> arrays, NumericArray &weights, BlendMode mode = open);
-    static NumericArray blend(std::vector<NumericArray> arrays, double weight, BlendMode mode = closed);
+    static NumericArray blend(std::vector<NumericArray> arrays, double weight, BlendMode mode = open);
 
     NumericArray() = default;
     NumericArray(std::array<double, N> elements)
@@ -198,7 +198,7 @@ template <int N>
 NumericArray<N> NumericArray<N>::operator+(const double term)
 {
     return immutableTransform([term](double x)
-                               { return x + term; });
+                              { return x + term; });
 }
 
 template <int N>
@@ -225,14 +225,14 @@ template <int N>
 NumericArray<N> NumericArray<N>::operator-()
 {
     return immutableTransform([](double x)
-                               { return -x; });
+                              { return -x; });
 }
 
 template <int N>
 NumericArray<N> NumericArray<N>::operator-(const double term)
 {
     return immutableTransform([term](double x)
-                               { return x - term; });
+                              { return x - term; });
 }
 
 template <int N>
@@ -259,7 +259,7 @@ template <int N>
 NumericArray<N> NumericArray<N>::operator*(const double term)
 {
     return immutableTransform([term](double x)
-                               { return x * term; });
+                              { return x * term; });
 }
 
 template <int N>
@@ -286,7 +286,7 @@ template <int N>
 NumericArray<N> NumericArray<N>::operator/(const double term)
 {
     return immutableTransform([term](double x)
-                               { return x / term; });
+                              { return x / term; });
 }
 
 template <int N>

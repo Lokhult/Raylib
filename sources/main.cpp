@@ -55,6 +55,7 @@ int main(void)
                         }});
 
     auto rect = RaylibShape::Rectangle({25, 25}, {75, 75});
+    rect.subdivide(2);
 
     SetTargetFPS(60);
 
