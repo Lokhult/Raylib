@@ -42,6 +42,19 @@ public:
         _vertices = newVertices;
     }
 
+    void smooth(double stability)
+    {
+        std::vector<Vec2> smoothedVertices;
+
+        for (int i = 0; i < _vertices.size(); i++)
+        {
+            std::vector<Vec2> vertices{
+                _vertices[(i + _vertices.size() - 1) % _vertices.size()],
+                _vertices[i],
+                _vertices[(i + 1) % _vertices.size()]};
+        }
+    }
+
     void draw()
     {
         for (int i = 0; i < _vertices.size(); i++)

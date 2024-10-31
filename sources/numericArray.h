@@ -21,6 +21,7 @@ public:
     static NumericArray merge(NumericArray &leftArray, NumericArray &rightArray, const std::function<double(double, double)> transformation);
     static NumericArray blend(std::vector<NumericArray> arrays, NumericArray &weights, BlendMode mode = open);
     static NumericArray blend(std::vector<NumericArray> arrays, double weight, BlendMode mode = open);
+    static NumericArray average(std::vector<NumericArray> arrays);
 
     NumericArray() = default;
     NumericArray(std::array<double, N> elements)
@@ -124,6 +125,18 @@ NumericArray<N> NumericArray<N>::blend(std::vector<NumericArray> arrays, double 
     }
 
     return blend(arrays, weights, mode);
+}
+
+template <int N>
+NumericArray<N> NumericArray<N>::average(std::vector<NumericArray> arrays)
+{
+    NumericArray<N> result;
+    for (auto array : arrays)
+    {
+        result += array;
+    }
+    result /= arrays.size();
+    return result;
 }
 
 template <int N>
