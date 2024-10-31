@@ -7,7 +7,8 @@
 #include "RLCamera.h"
 #include "grid.h"
 #include "transitionEngine.h"
-#include "console.h"
+#include "raylibConsole.h"
+#include "consoleCommand.h"
 
 using namespace std;
 
@@ -41,19 +42,22 @@ int main(void)
 
     RLCamera camera{SCREEN_WIDTH, SCREEN_HEIGHT};
     Grid grid;
-    Console console;
+    RaylibConsole console{SCREEN_WIDTH, SCREEN_HEIGHT};
 
-    auto callback = [](string)
+    auto callback = [](vector<string> args)
     {
-        CloseWindow();
         return "Exit successful";
     };
 
     ConsoleCommand consoleCommand{
-        "exit",
+        {"exit"},
         callback};
 
-    console.addCommand(consoleCommand);
+    console.addCommand({{"exit"},
+                        [](vector<string> args)
+                        {
+                            return "Exit successful";
+                        }});
     TransitionEngine<2> transitionEngine2;
     TransitionEngine<4> transitionEngine4;
 

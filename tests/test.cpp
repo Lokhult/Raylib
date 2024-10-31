@@ -1,17 +1,28 @@
 #include <iostream>
-#include "../sources/numericArray.h"
+#include "../sources/console.h"
 
 using namespace std;
 
 int main()
 {
-    Scalar v1{0};
-    Scalar v2{1};
-    Scalar v3{2};
-    for (double v = 0.0; v <= 1.0; v += 0.1)
+    Console console;
+    auto callback = [](vector<string> args)
     {
-        cout << "v: " << v << endl;
-        cout << Scalar::blend({v1, v2, v3}, v, Scalar::BlendMode::closed).toString() << endl;
+        int arg1 = stoi(args[0]);
+        double arg2 = stod(args[1]);
+        return "Exit successful with int " + to_string(arg1) + " and double " + to_string(arg2);
+    };
+
+    ConsoleCommand consoleCommand{
+        {"exit", regexInt, regexDouble},
+        callback};
+
+    console.addCommand(consoleCommand);
+
+    string consoleContent;
+    while (getline(cin, consoleContent))
+    {
+        cout << console.submitCommand(consoleContent) << endl;
     }
 
     return 0;
