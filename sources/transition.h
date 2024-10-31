@@ -53,15 +53,18 @@ private:
     double _duration;
     double _seconds = 0;
     std::vector<NumericArray<N>> _frames;
+    NumericArray<N> &_boundArray;
     std::array<std::function<double(double)>, N> _interpolations;
     std::array<std::function<double(double)>, N> _overflows;
 
 public:
     Transition(
+        NumericArray<N> &boundArray,
         double duration,
         std::vector<NumericArray<N>> frames,
         std::function<double(double)> interpolation = Interpolations::linear,
-        std::function<double(double)> overflow = Overflows::clamp) : _duration(duration),
+        std::function<double(double)> overflow = Overflows::clamp) : _boundArray(boundArray),
+                                                                     _duration(duration),
                                                                      _frames(frames)
     {
         for (int i = 0; i < N; i++)
@@ -72,10 +75,12 @@ public:
     }
 
     Transition(
+        NumericArray<N> &boundArray,
         double duration,
         std::vector<NumericArray<N>> frames,
         std::array<std::function<double(double)>, N> interpolations,
-        std::function<double(double)> overflow = Overflows::clamp) : _duration(duration),
+        std::function<double(double)> overflow = Overflows::clamp) : _boundArray(boundArray),
+                                                                     _duration(duration),
                                                                      _interpolations(interpolations),
                                                                      _frames(frames)
     {
@@ -86,17 +91,19 @@ public:
     }
 
     Transition(
+        NumericArray<N> &boundArray,
         double duration,
         std::vector<NumericArray<N>> frames,
         std::array<std::function<double(double)>, N> interpolations,
-        std::array<std::function<double(double)>, N> overflows) : _duration(duration),
+        std::array<std::function<double(double)>, N> overflows) : _boundArray(boundArray),
+                                                                  _duration(duration),
                                                                   _frames(frames),
                                                                   _interpolations(interpolations),
                                                                   _overflows(overflows)
     {
     }
 
-    NumericArray<N> update(double deltaSeconds)
+    void update(double deltaSeconds)
     {
         _seconds += deltaSeconds;
 
@@ -107,6 +114,11 @@ public:
         }
         auto weights = NumericArray<N>{t};
 
-        return NumericArray<N>::blend(_frames, weights, NumericArray<N>::BlendMode::open);
+        auto result = NumericArray<N>::blend(_frames, weights, NumericArray<N>::BlendMode::open);
+
+        for (int i = 0; i < N; i++)
+        {
+            _boundArray[i] = result[i];
+        }
     }
 };

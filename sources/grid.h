@@ -15,8 +15,6 @@ public:
     void draw(RLCamera cam)
     {
         int extension = 10;
-        auto c = cam.cam();
-        auto v = Vector2{0, 0};
 
         auto topLeft = GetScreenToWorld2D({0, 0}, cam.cam());
         auto topRight = GetScreenToWorld2D({static_cast<float>(GetScreenWidth()), 0}, cam.cam());
