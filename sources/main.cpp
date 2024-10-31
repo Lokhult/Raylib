@@ -1,3 +1,4 @@
+#include <string>
 #include <vector>
 
 #include "raylib.h"
@@ -41,6 +42,18 @@ int main(void)
     RLCamera camera{SCREEN_WIDTH, SCREEN_HEIGHT};
     Grid grid;
     Console console;
+
+    auto callback = [](string)
+    {
+        CloseWindow();
+        return "Exit successful";
+    };
+
+    ConsoleCommand consoleCommand{
+        "exit",
+        callback};
+
+    console.addCommand(consoleCommand);
     TransitionEngine<2> transitionEngine2;
     TransitionEngine<4> transitionEngine4;
 
