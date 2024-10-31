@@ -5,6 +5,7 @@
 #include "transition.h"
 #include "RLCamera.h"
 #include "grid.h"
+#include "transitionEngine.h"
 
 using namespace std;
 
@@ -36,6 +37,8 @@ int main(void)
 {
     RLCamera camera{SCREEN_WIDTH, SCREEN_HEIGHT};
     Grid grid;
+    TransitionEngine<2> transitionEngine2;
+    TransitionEngine<4> transitionEngine4;
 
     Vec2 pos;
     Rgba color;
@@ -47,6 +50,9 @@ int main(void)
                                  {Interpolations::linear, Interpolations::linear},
                                  Overflows::repeat};
     Transition<4> transition_colors{color, 4, {Rgba{150, 150, 255, 2500}, Rgba{255, 150, 150, 2500}}, Interpolations::ease_in_ease_out, Overflows::repeat};
+    transitionEngine2.addTransition(transition_pos);
+    transitionEngine4.addTransition(transition_colors);
+
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
     SetTargetFPS(60);
 
@@ -54,12 +60,13 @@ int main(void)
 
     while (!WindowShouldClose())
     {
+        transitionEngine2.update(GetFrameTime());
+        transitionEngine4.update(GetFrameTime());
+
         BeginDrawing();
         camera.begin();
         camera.update(GetFrameTime());
         ClearBackground(BLUE);
-        transition_pos.update(GetFrameTime());
-        transition_colors.update(GetFrameTime());
         grid.draw(camera);
         DrawCircle(pos[0], pos[1], 50, numeric_array_to_color(color));
 
