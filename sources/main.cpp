@@ -9,6 +9,7 @@
 #include "transitionEngine.h"
 #include "raylibConsole.h"
 #include "consoleCommand.h"
+#include "raylibShape.h"
 
 using namespace std;
 
@@ -53,6 +54,8 @@ int main(void)
                             return "Circle created";
                         }});
 
+    auto rect = RaylibShape::Rectangle({25, 25}, {75, 75});
+
     SetTargetFPS(60);
 
     while (!WindowShouldClose())
@@ -64,6 +67,7 @@ int main(void)
             {
                 camera.update(GetFrameTime());
                 ClearBackground(BLUE);
+                rect.draw();
                 grid.draw(camera);
                 for (auto circle : circles)
                 {
