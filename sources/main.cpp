@@ -4,6 +4,7 @@
 #include "numericArray.h"
 #include "transition.h"
 #include "RLCamera.h"
+#include "grid.h"
 
 using namespace std;
 
@@ -52,6 +53,7 @@ void drawGrid(float spacing, int extension)
 int main(void)
 {
     RLCamera camera{SCREEN_WIDTH, SCREEN_HEIGHT};
+    Grid grid;
     Rgba color{150, 150, 255, 2500};
     Rgba color1{150, 150, 255, 2500};
     Rgba color2{255, 150, 150, 2500};
@@ -82,7 +84,7 @@ int main(void)
         auto pos = transition_pos.update(GetFrameTime());
         auto color = transition_colors.update(GetFrameTime());
         // ClearBackground(RAYWHITE);
-        drawGrid(50, 10);
+        grid.draw(camera);
         DrawCircle(pos[0], pos[1], 50, numeric_array_to_color(color));
 
         // DrawCircle(50, 150, 50, BLACK);
