@@ -2,16 +2,16 @@
 
 #include <raylib.h>
 
-class camera
+class RLCamera
 {
 private:
     Camera2D _camera;
     bool _isDragging = false;
 
 public:
-    camera(Camera2D camera) : _camera(camera) {}
+    RLCamera(Camera2D camera) : _camera(camera) {}
 
-    camera(int screenWidth, int screenHeight)
+    RLCamera(int screenWidth, int screenHeight)
     {
         _camera = Camera2D{
             .offset = {static_cast<float>(screenWidth / 2), static_cast<float>(screenHeight / 2)},
@@ -51,5 +51,10 @@ public:
     void end()
     {
         EndMode2D();
+    }
+
+    Camera2D cam()
+    {
+        return _camera;
     }
 };

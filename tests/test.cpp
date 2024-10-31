@@ -1,17 +1,17 @@
 #include <iostream>
-#include "../sources/numeric_array.h"
+#include "../sources/numericArray.h"
 
 using namespace std;
 
 int main()
 {
-    scalar v1{0};
-    scalar v2{1};
-    scalar v3{2};
+    Scalar v1{0};
+    Scalar v2{1};
+    Scalar v3{2};
     for (double v = 0.0; v <= 1.0; v += 0.1)
     {
         cout << "v: " << v << endl;
-        cout << scalar::blend({v1, v2, v3}, v, scalar::blend_mode::closed).to_string() << endl;
+        cout << Scalar::blend({v1, v2, v3}, v, Scalar::BlendMode::closed).toString() << endl;
     }
 
     return 0;

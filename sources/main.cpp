@@ -1,9 +1,9 @@
 #include <vector>
 
 #include "raylib.h"
-#include "numeric_array.h"
+#include "numericArray.h"
 #include "transition.h"
-#include "camera.h"
+#include "RLCamera.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ using namespace std;
 
 #define WINDOW_TITLE "Window title"
 
-Color numeric_array_to_color(rgba &array)
+Color numeric_array_to_color(Rgba &array)
 {
     return Color{static_cast<unsigned char>(array[0]), static_cast<unsigned char>(array[1]), static_cast<unsigned char>(array[2]), static_cast<unsigned char>(array[3])};
 }
@@ -31,9 +31,9 @@ vector<double> linear_range(double start, double end, double count)
     return result;
 }
 
-vec2 denormalized_coords(vec2 coords)
+Vec2 denormalized_coords(Vec2 coords)
 {
-    return vec2{coords[0] * SCREEN_WIDTH, coords[1] * SCREEN_HEIGHT};
+    return Vec2{coords[0] * SCREEN_WIDTH, coords[1] * SCREEN_HEIGHT};
 }
 
 void drawGrid(float spacing, int extension)
@@ -41,7 +41,6 @@ void drawGrid(float spacing, int extension)
     float cutoff = 10e6;
     for (int i = 0; i <= extension; i++)
     {
-        // horizontals
         DrawLineV({-cutoff, i * spacing}, {cutoff, i * spacing}, BLACK);
         DrawLineV({-cutoff, -i * spacing}, {cutoff, -i * spacing}, BLACK);
         DrawLineV({i * spacing, -cutoff}, {i * spacing, cutoff}, BLACK);
@@ -52,20 +51,20 @@ void drawGrid(float spacing, int extension)
 
 int main(void)
 {
-    camera cam{SCREEN_WIDTH, SCREEN_HEIGHT};
-    rgba color{150, 150, 255, 2500};
-    rgba color1{150, 150, 255, 2500};
-    rgba color2{255, 150, 150, 2500};
-    vector<vec2> positions{
-        vec2{0.0, 0.0},
-        vec2{SCREEN_WIDTH, SCREEN_HEIGHT},
+    RLCamera camera{SCREEN_WIDTH, SCREEN_HEIGHT};
+    Rgba color{150, 150, 255, 2500};
+    Rgba color1{150, 150, 255, 2500};
+    Rgba color2{255, 150, 150, 2500};
+    vector<Vec2> positions{
+        Vec2{0.0, 0.0},
+        Vec2{SCREEN_WIDTH, SCREEN_HEIGHT},
     };
-    vector<hsla> colors{
-        rgba{150, 150, 255, 2500},
-        rgba{255, 150, 150, 2500}};
+    vector<Rgba> colors{
+        Rgba{150, 150, 255, 2500},
+        Rgba{255, 150, 150, 2500}};
 
-    transition<2> transition_pos{2, positions, {interpolations::linear, interpolations::linear}, overflows::repeat};
-    transition<4> transition_colors{3, colors, interpolations::ease_in_ease_out, overflows::repeat};
+    Transition<2> transition_pos{2, positions, {Interpolations::linear, Interpolations::linear}, Overflows::repeat};
+    Transition<4> transition_colors{3, colors, Interpolations::ease_in_ease_out, Overflows::repeat};
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
     SetTargetFPS(60);
 
@@ -74,8 +73,8 @@ int main(void)
     while (!WindowShouldClose())
     {
         BeginDrawing();
-        cam.begin();
-        cam.update(GetFrameTime());
+        camera.begin();
+        camera.update(GetFrameTime());
         auto delta = GetTime() / 10;
         auto x = color1 * (1 - delta);
         auto y = color2 * delta;
@@ -97,7 +96,7 @@ int main(void)
         // const char *text = str.c_str();
         // const Vector2 text_size = MeasureTextEx(GetFontDefault(), text, 20, 1);
         // DrawText(text, SCREEN_WIDTH / 2 - text_size.x / 2, 150, 20, BLACK);
-        cam.end();
+        camera.end();
         EndDrawing();
     }
 

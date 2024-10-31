@@ -7,7 +7,7 @@
 #include <random>
 
 // A set of function from [0, 1] to [0, 1]
-namespace interpolations
+namespace Interpolations
 {
     double linear(double t)
     {
@@ -29,7 +29,7 @@ namespace interpolations
 }
 
 // A set of functions to handle overflow of range [0, 1]
-namespace overflows
+namespace Overflows
 {
     double clamp(double t)
     {
@@ -47,21 +47,21 @@ namespace overflows
 }
 
 template <int N>
-class transition
+class Transition
 {
 private:
     double _duration;
     double _seconds = 0;
-    std::vector<numeric_array<N>> _frames;
+    std::vector<NumericArray<N>> _frames;
     std::array<std::function<double(double)>, N> _interpolations;
     std::array<std::function<double(double)>, N> _overflows;
 
 public:
-    transition(
+    Transition(
         double duration,
-        std::vector<numeric_array<N>> frames,
-        std::function<double(double)> interpolation = interpolations::linear,
-        std::function<double(double)> overflow = overflows::clamp) : _duration(duration),
+        std::vector<NumericArray<N>> frames,
+        std::function<double(double)> interpolation = Interpolations::linear,
+        std::function<double(double)> overflow = Overflows::clamp) : _duration(duration),
                                                                      _frames(frames)
     {
         for (int i = 0; i < N; i++)
@@ -71,11 +71,11 @@ public:
         }
     }
 
-    transition(
+    Transition(
         double duration,
-        std::vector<numeric_array<N>> frames,
+        std::vector<NumericArray<N>> frames,
         std::array<std::function<double(double)>, N> interpolations,
-        std::function<double(double)> overflow = overflows::clamp) : _duration(duration),
+        std::function<double(double)> overflow = Overflows::clamp) : _duration(duration),
                                                                      _interpolations(interpolations),
                                                                      _frames(frames)
     {
@@ -85,9 +85,9 @@ public:
         }
     }
 
-    transition(
+    Transition(
         double duration,
-        std::vector<numeric_array<N>> frames,
+        std::vector<NumericArray<N>> frames,
         std::array<std::function<double(double)>, N> interpolations,
         std::array<std::function<double(double)>, N> overflows) : _duration(duration),
                                                                   _frames(frames),
@@ -96,7 +96,7 @@ public:
     {
     }
 
-    numeric_array<N> update(double deltaSeconds)
+    NumericArray<N> update(double deltaSeconds)
     {
         _seconds += deltaSeconds;
 
@@ -105,8 +105,8 @@ public:
         {
             t[i] = _interpolations[i](_overflows[i](_seconds / _duration));
         }
-        auto weights = numeric_array<N>{t};
+        auto weights = NumericArray<N>{t};
 
-        return numeric_array<N>::blend(_frames, weights, numeric_array<N>::blend_mode::open);
+        return NumericArray<N>::blend(_frames, weights, NumericArray<N>::BlendMode::open);
     }
 };
