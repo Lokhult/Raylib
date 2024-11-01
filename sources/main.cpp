@@ -10,6 +10,7 @@
 #include "raylibConsole.h"
 #include "consoleCommand.h"
 #include "raylibShape.h"
+#include "numericArrays.h"
 
 using namespace std;
 
@@ -54,8 +55,15 @@ int main(void)
                             return "Circle created";
                         }});
 
-    auto rect = RaylibShape::Rectangle({25, 25}, {75, 75});
-    rect.subdivide(2);
+    vector<Shape> rects;
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 5; j++)
+        {
+            rects.push_back(Shape::Rectangle({0.0 + i * 50, 0.0 + j * 50}, {25.0 + i * 50, 25.0 + j * 50}));
+            rects[rects.size() - 1].subdivideUntil(i * j + 4);
+        }
+    }
 
     SetTargetFPS(60);
 
@@ -68,12 +76,9 @@ int main(void)
             {
                 camera.update(GetFrameTime());
                 ClearBackground(BLUE);
-                rect.draw();
+                for (auto rect : rects)
+                    rect.draw(1, true);
                 grid.draw(camera);
-                for (auto circle : circles)
-                {
-                    DrawCircle(circle[0], circle[1], circle[2], GREEN);
-                }
             }
             camera.end();
 
