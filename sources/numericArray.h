@@ -13,21 +13,7 @@ namespace NumericArrayEnums
     };
 }
 
-template <typename T>
-concept IsArithmetic = requires(T t, double d) {
-    { +t } -> std::convertible_to<T>;
-    { t + t } -> std::convertible_to<T>;
-    { t ++= t } -> std::convertible_to<T>;
-    { -t } -> std::convertible_to<T>;
-    { t - t } -> std::convertible_to<T>;
-    { t -= t } -> std::convertible_to<T>;
-    { t * t } -> std::convertible_to<T>;
-    { t *= t } -> std::convertible_to<T>;
-    { t / t } -> std::convertible_to<T>;
-    { t /= t } -> std::convertible_to<T>;
-};
-
-template <size_t N, IsArithmetic V = double>
+template <size_t N, typename V = double>
 class NumericArray
 {
 public:
